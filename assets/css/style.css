@@ -1,0 +1,223 @@
+/* --- style.css --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+#navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+.logo-area { flex: 1; }
+.logo-area a { text-decoration: none; }
+.logo-area h1 {
+    font-family: 'Oleo Script Swash Caps', cursive;
+    color: #EB6753;
+    font-size: 32px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.logo-area h1:hover {
+    transform: translateY(-3px) scale(1.05);
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 5px 15px rgba(235, 103, 83, 0.4));
+}
+
+.nav-wrapper { display: contents; }
+
+.nav-center {
+    flex: 2; 
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 120px;
+}
+
+.nav-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px; 
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    width: 100%; 
+    justify-content: space-evenly;
+}
+
+/* --- LINKS & UNDERLINE --- */
+.nav-links li a {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    position: relative;
+    transition: all 0.3s ease; /* CONTROL SPEED HERE */
+}
+.signin-btn {
+    background: #EB6753;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.signin-btn:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 5px 15px rgba(235, 103, 83, 0.4));
+}
+
+/* Hide elements by default for the JS toggle */
+.hidden {
+    display: none !important;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background-color: #EB6753;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-links li a:hover{
+    color: #EB6753;
+    transform: translateY(-3px) scale(1.1); 
+    filter: drop-shadow(0 5px 15px rgba(235, 103, 83, 0.4));
+}
+.nav-links li a.active {
+    color: #EB6753;
+    transform: scale(1.03); /* CONTROL MOVEMENT & SIZE HERE */
+    filter: drop-shadow(0 5px 15px rgba(235, 103, 83, 0.4));
+}
+
+.nav-links li a.active:hover {
+    transform: translateY(-3px) scale(1.1); /* CONTROL MOVEMENT & SIZE HERE */
+}
+
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
+    width: 50%; 
+}
+
+/* --- ICON LINKS FIX --- */
+.icon-link {
+    display: inline-block;
+    text-decoration: none;
+    /* Remove transition from here, it's the wrapper */
+}
+
+.icon-link i {
+    font-size: 24px;
+    color: #EB6753;
+    display: inline-block;
+    /* The transition must be on the element that is actually moving */
+    transition: all 0.3s ease; 
+}
+
+.logo-area {
+    flex: 0 1 auto; /* Don't let it hog space */
+}
+.logo-area a {
+    display: inline-block; /* Crucial: restricts link area to the text only */
+}
+
+/* Apply the hover effect to the 'i' tag when the 'a' is hovered */
+.icon-link:hover i {
+    transform: translateY(-3px) scale(1.1); /* CONTROL ICON GROWTH HERE */
+    filter: drop-shadow(0 5px 15px rgba(235, 103, 83, 0.4));
+}
+
+.icon-link:hover .fa-heart::before { content: "\f004"; font-weight: 900; }
+.icon-link:hover .fa-circle-user::before { content: "\f2bd"; font-weight: 900; }
+
+
+/* --- MOBILE VIEW --- */
+.menu-open, .menu-close { display: none; }
+
+@media (max-width: 900px) {
+    #navbar {
+        top: 0; left: 0; transform: none;
+        width: 100%; border-radius: 0;
+        height: 60px; padding: 0 20px;
+    }
+
+    .nav-wrapper {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 80px 30px;
+        transition: 0.4s;
+    }
+
+    .nav-wrapper.active { right: 0; }
+
+    .nav-center, .nav-right {
+        flex: none;
+        width: 100%;
+        justify-content: flex-start;
+        margin: 0;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+        width: 100%;
+    }
+
+    /* FIX: ENABLING UNDERLINE ON MOBILE */
+    .nav-links li a::after {
+        display: block; /* Make sure it's not hidden */
+    }
+
+    .nav-right {
+        flex-direction: row;
+        justify-content: flex-start;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        display: flex;
+        gap: 20px;
+    }
+
+    .menu-open { display: block; font-size: 24px; cursor: pointer; }
+    .menu-close {
+        display: block;
+        position: absolute; top: 20px; right: 20px;
+        font-size: 24px; cursor: pointer;
+    }
+}

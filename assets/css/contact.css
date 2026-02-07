@@ -1,0 +1,232 @@
+/* GENERAL BODY SETUP */
+body {
+    background-color: #efefef;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Changed from height to min-height to prevent cutoff on small screens */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+}
+
+/* MAIN BOX CONTAINER */
+.box {
+    display: flex;
+    width: 65%;
+    max-width: 1000px;
+    min-height: 300px; /* Slight height increase for breathing room */
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    margin-top: 80px; /* Space for fixed nav */
+}
+
+
+
+.box-left h1.white {
+    color: #fff;
+    font-size: 50px;
+    margin: 0;
+    line-height: 1;
+}
+
+
+.box input[type="text"],
+.box input[type="email"]{
+    width: 96%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    outline: none;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box; /* Fixes padding issues */
+    transition: 0.3s ease;
+    height: 45px;
+}
+.box textarea {
+    width: 96%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box; /* Fixes padding issues */
+    transition: 0.3s ease;
+    resize: none
+}
+
+.box input:focus, 
+.box textarea:focus {
+    border-color: #EB6753;
+}
+
+/* LEFT SIDE (ORANGE) */
+.box-left {
+    flex: 1;
+    background: #EB6753;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* CHANGED: Switched from 'center' to 'flex-start' so items don't push each other */
+    justify-content: flex-start; 
+    padding: 40px;
+    position: relative;
+    
+    /* CONTROL 1: This pushes everything down from the very top edge */
+    padding-top: 80px; 
+}
+
+.title-group {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    gap: 10px;
+    z-index: 2; 
+
+    /* CONTROL 2: Move "Get In" independent of the icon */
+    margin-bottom: 0px; /* Reset this */
+transform: translate(35px,-56px); /* Use this to nudge it higher/lower without moving the icon */
+}
+
+/* Big Mail Icon Styling */
+.big-mail-icon {
+    font-size: 220px;
+    color: #f5f5f5; /* Added transparency per design standard */
+    
+    /* CONTROL 3: Push the icon down away from the text */
+    margin-top: -20px; 
+}
+
+/* RIGHT SIDE (WHITE) */
+.box-right {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    /* CHANGED: Switched from 'center' to 'flex-start' for manual control */
+    justify-content: flex-start;
+    
+    /* CONTROL 4: This sets where the "Touch" text starts */
+    padding-top: 100px; 
+}
+
+.box-right h1.orange {
+    color: #EB6753;
+    font-size: 50px;
+    margin: 0; 
+    text-align: left;
+    line-height: 1;
+    transform: translate(-33px,-75px);
+}
+
+/* FORM STYLING */
+.box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-height: 300px;
+
+    /* CONTROL 5: This moves the form down without moving "Touch" */
+    margin-top:-40px; 
+}
+
+/* SUBMIT BUTTON FIX */
+.box input[type="submit"] {
+    background: #EB6753;
+    color: #fff;
+    border: none;
+    /* Fixed centering issues */
+    padding: 0; 
+    line-height: 40px; /* Should match the height */
+    text-align: center;
+    margin-left: 215px;
+    font-size: 20px;
+    font-weight: 650;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+    height: 40px;
+    width: 30%;
+}:xr-overlay
+
+.box input[type="submit"]:hover {
+    transform: translateY(-2px);
+}
+
+/* VISIBILITY LOGIC */
+.mobile-touch { display: none; }
+.desktop-touch { display: block; }
+
+/* --------------------------- */
+/* MOBILE / TABLET RESPONSIVE  */
+/* --------------------------- */
+@media (max-width: 900px) { /* Increased breakpoint for better tablet support */
+    
+    body { 
+        height: auto; 
+        padding: 120px 20px 50px; /* Top padding clears the nav */
+        align-items: flex-start; /* Stops vertical centering on scrollable pages */
+    }
+    
+    .box {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+    }
+
+    /* LEFT SIDE MOBILE (The Header) */
+    .box-left {
+        width: 100%;
+        padding: 40px 20px;
+        box-sizing: border-box;
+        /* Rounded corners on top only */
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-top: 40px; 
+        justify-content: center;
+    }
+
+    .title-group {
+        /* CENTER ALIGNMENT ON MOBILE */
+        justify-content: center; 
+        gap: 10px;
+        transform: none;
+    }
+
+    .big-mail-icon { 
+        font-size: 100px;
+        margin-top: 10px;
+    }
+
+    /* RIGHT SIDE MOBILE (The Body) */
+    .box-right {
+        width: 100%;
+        padding: 40px 25px;
+        box-sizing: border-box;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        justify-content: center; /* Keep centered on phone */
+        padding-top: 40px;
+    }
+
+    .box-right h1.orange {
+        margin-bottom: 20px;
+        text-align: center; /* Center the title if it appears here */
+    }
+    .box form {
+        margin-top: 20px; /* Standard gap on phone */
+    }
+
+    /* TEXT TOGGLING */
+    .mobile-touch { display: block; } /* Shows 'touch' in orange box */
+    .desktop-touch { display: none; } /* Hides 'touch' in white box */
+}

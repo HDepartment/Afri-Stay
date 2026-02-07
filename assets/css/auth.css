@@ -1,0 +1,98 @@
+/* Inherits base .box styles from contact.css logic, defined here for clarity */
+.box {
+    display: flex;
+    width: 65%;
+    max-width: 700px; 
+    background-color: #f5f5f5;
+    box-shadow: 0 20px 50px rgba(135, 133, 133, 0.15);
+    border-radius: 30px;
+    overflow: hidden;
+    margin-left: 22%;
+    margin-top: 120px; /* Clear navbar */
+    min-height: 470px;/* Taller for login */
+}
+
+/* LEFT SIDE */
+.box-left {
+    flex: 0.8;
+    background: #EB6753;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.box-left h1 { font-size: 50px; line-height: 1; }
+.auth-desc { margin-top: 20px; font-size: 16px; opacity: 0.9; }
+.big-icon { font-size: 120px; color: rgba(255,255,255,0.4); align-self: center; margin-top: 20%;}
+
+/* RIGHT SIDE */
+.box-right {
+    flex: 1;
+    padding: 40px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOGGLE */
+.auth-toggle {
+    display: flex;
+    gap: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.auth-toggle button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    color: #aaa;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.auth-toggle button.active { color: #EB6753; }
+
+/* FORM */
+.form-title { font-size: 32px; color: #EB6753; margin-bottom: 20px; }
+
+.input-group { margin-bottom: 15px; }
+input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    font-size: 16px;
+    outline: none;
+}
+input:focus { border-color: #EB6753; }
+
+#submitBtn {
+    width: 100%;
+    padding: 15px;
+    background: #EB6753;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+#submitBtn:hover { transform: translateY(-2px); }
+
+.hidden { display: none; }
+.error-msg { color: red; margin-top: 10px; display: none; }
+.success-msg { color: green; margin-top: 10px; display: none; }
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .box { flex-direction: column; width: 90%; margin-top: 100px; height: auto; }
+    .box-left { padding: 40px 20px; align-items: center; text-align: center; }
+    .big-icon { font-size: 100px; margin-top: 20px; }
+    .box-right { padding: 40px 20px; }
+}
