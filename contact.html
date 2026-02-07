@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - AfriStay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/contact.css">
+</head>
+<body>
+    <nav id="navbar">
+        <div class="logo-area">
+            <a href="index.html"><h1>AfriStay</h1></a>
+        </div>
+
+        <div class="nav-wrapper" id="navWrapper">
+            <i class="fa-solid fa-xmark menu-close" onclick="toggleMenu()"></i>
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Real Estate</a></li>
+                    <li><a href="vehicle.html">Vehicles</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="icon-link"><i class="fa-regular fa-heart"></i></a>
+                <a href="auth.html" id="auth-btn" class="signin-btn">Sign In</a> 
+            </div>
+        </div>
+        <i class="fa-solid fa-bars menu-open" onclick="toggleMenu()"></i>
+    </nav>
+
+    <div class="box">
+        <div class="box-left">
+            <div class="title-group">
+                <h1 class="white">Get in</h1>
+                <h1 class="white mobile-touch">touch</h1>
+            </div>
+            <i class="fa-solid fa-envelope big-mail-icon"></i>
+        </div>
+
+        <div class="box-right">
+            <h1 class="orange desktop-touch">touch</h1>
+            <form id="contactForm">
+                <input type="text" placeholder="Name..." id="contactName" required>
+                <input type="email" placeholder="Email..." id="contactEmail" required>
+                <textarea placeholder="Message..." rows="4" id="contactMessage" required></textarea>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/contact.js"></script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin Dashboard - AfriStay</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/admin.css">
+    </head>
+    <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="mobile-header" id="mobileHeader">
+        <button id="mobileMenuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        <h1>AfriStay</h1>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area"><h1>AfriStay</h1></div>
+        <nav class="nav" id="mainNav">
+        <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+        <button class="nav-btn" data-tab="users"><i class="fa-solid fa-users"></i> Users</button>
+        <button class="nav-btn" data-tab="listings"><i class="fa-solid fa-list"></i> Listings</button>
+        <button class="nav-btn" data-tab="bookings"><i class="fa-solid fa-calendar-check"></i> Bookings</button>
+        <button class="nav-btn" data-tab="events"><i class="fa-solid fa-calendar-day"></i> Events</button>
+        <button class="nav-btn" data-tab="promotions"><i class="fa-solid fa-tags"></i> Promotions</button>
+        <button class="nav-btn" data-tab="messages"><i class="fa-solid fa-envelope"></i> Messages</button>
+        <button class="nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+        <button class="nav-btn logout" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </nav>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+
+        <!-- DASHBOARD -->
+        <div id="dashboardPanel" class="content-panel active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Users</h3>
+                        <p class="stat-number" id="totalUsers">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-home"></i></div>
+                    <div class="stat-info">
+                        <h3>Listings</h3>
+                        <p class="stat-number" id="totalListings">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <h3>Bookings</h3>
+                        <p class="stat-number" id="totalBookings">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="stat-info">
+                        <h3>Revenue</h3>
+                        <p class="stat-number" id="totalRevenue">0 RWF</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-section">
+                <div class="section-header">
+                    <h2>Recent Bookings</h2>
+                    <button class="action-btn" id="refreshDashboardBtn"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th> <th>ID</th> <th>Item</th> <th>Renter</th> <th>Status</th> <th>Price</th></tr>
+                        </thead>
+                        <tbody id="recentBookingsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- USERS -->
+        <div id="usersPanel" class="content-panel">
+            <div class="data-section">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <div class="search-box" style="min-width:220px;">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="userSearchInput" placeholder="Search user..." onkeyup="filterTable('userSearchInput','usersTableBody')">
+                        </div>
+                        <button class="action-btn" id="fetchUsersBtn"><i class="fa-solid fa-rotate-right"></i></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th><th>User</th><th>Email</th><th>Phone</th><th>Role</th><th>Owner</th><th>Status</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTINGS -->
+        <div id="listingsPanel" class="content-panel">
+            <div class="data-section">
+                <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+                    <div style="display:flex; width:100%; justify-content:space-between; align-items:center;">
+                        <h2>Manage Listings</h2>
+                        <button class="action-btn" id="openCreateListingBtn"><i class="fa-solid fa-plus"></i> Add Listing</button>
+                    </div>
+
+                    <div class="filter-toolbar" style="display:flex; gap:10px; width:100%; flex-wrap:wrap;">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="listingSearchInput" placeholder="Search listing..." onkeyup="filterListings()">
+                        </div>
+                        <select id="filterProvince" class="form-control"></select>
+                        <select id="filterDistrict" class="form-control" disabled></select>
+                        <select id="filterSector" class="form-control" disabled></select>
+                        <button class="btn-primary" style="width:auto; padding:0 18px;" id="resetFiltersBtn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th><th>Image</th><th>Title</th><th>Price</th><th>Location</th><th>Owner</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="listingsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKINGS -->
+        <div id="bookingsPanel" class="content-panel">
+            <div class="data-section">
+                <div class="section-header">
+                    <h2>All Bookings</h2>
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="bookingSearchInput" placeholder="Search ID..." onkeyup="filterTable('bookingSearchInput','allBookingsBody')">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th><th>ID</th><th>Listing</th><th>Renter</th><th>Dates</th><th>Total</th><th>Status</th></tr>
+                        </thead>
+                        <tbody id="allBookingsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENTS -->
+        <div id="eventsPanel" class="content-panel">
+            <div class="data-section">
+                <div class="section-header">
+                    <h2>Events</h2>
+                    <button class="action-btn" onclick="openModal('eventModal')"><i class="fa-solid fa-plus"></i> Add Event</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>#</th><th>Title</th><th>Date</th><th>Location</th><th>Action</th></tr></thead>
+                        <tbody id="eventsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROMOTIONS -->
+        <div id="promotionsPanel" class="content-panel">
+            <div class="data-section">
+                <div class="section-header">
+                    <h2>Promotions</h2>
+                    <button class="action-btn" onclick="openPromoModal()"><i class="fa-solid fa-plus"></i> Add Promo</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>Image</th><th>Code</th><th>Listing</th><th>Discount</th><th>Dates</th><th>Action</th></tr></thead>
+                        <tbody id="promotionsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div id="messagesPanel" class="content-panel">
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <div class="chat-header"><h3>Messages</h3></div>
+                    <div class="chat-user-list" id="chatUserList"></div>
+                </div>
+                <div class="chat-window">
+                    <div class="chat-window-header" id="chatWindowHeader">Select a conversation</div>
+                    <div class="chat-messages" id="chatMessagesArea"></div>
+                    <div class="chat-input-area">
+                        <input type="hidden" id="currentChatUserId">
+                        <input type="text" id="messageInput" placeholder="Type a message..." disabled>
+                        <button id="sendMessageBtn" onclick="sendMessage()" disabled><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settingsPanel" class="content-panel">
+            <div class="data-section">
+                <h2>Admin Profile Settings</h2>
+                <form id="settingsForm">
+                    <div class="form-group"><label>Current Email</label><input type="email" id="settingsEmail" class="form-control" disabled></div>
+                    <div class="form-group"><label>Update Email (Optional)</label><input type="email" id="newEmail" class="form-control" placeholder="Enter new email"></div>
+                    <div class="form-group"><label>Update Password (Optional)</label><input type="password" id="newPassword" class="form-control" placeholder="New Password"></div>
+                    <div class="form-actions"><button type="submit" class="btn-primary">Save Changes</button></div>
+                    <p id="settingsMsg" style="margin-top:10px;"></p>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- EVENT MODAL -->
+    <div class="form-modal" id="eventModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h3>Add Event</h3>
+                <button class="close-modal" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+            <form id="eventForm" class="form-body">
+                <div class="form-group"><label>Event Title</label><input type="text" id="evtTitle" class="form-control" required></div>
+                <div class="form-group"><label>Date</label><input type="date" id="evtDate" class="form-control" required></div>
+                <div class="form-group"><label>Specific Location</label><input type="text" id="evtLoc" class="form-control" required></div>
+                <button type="submit" class="btn-primary">Save Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LISTING MODAL -->
+    <div class="form-modal" id="listingModal">
+        <div class="form-content" style="width: 820px; max-height: 90vh; overflow-y: auto;">
+            <div class="form-header">
+                <h3>Add New Listing</h3>
+                <button class="close-modal" onclick="closeModal('listingModal')">&times;</button>
+            </div>
+            <form id="listingForm" class="form-body">
+                <div class="form-group" style="position: relative;">
+                    <label>Assign to Owner</label>
+                    <div class="search-wrapper" style="position:relative;">
+                        <input type="text" id="ownerSearch" class="form-control" placeholder="Search Owner Name..." autocomplete="off" oninput="searchOwners()">
+                        <input type="hidden" id="selectedOwnerId">
+                        <i class="fa-solid fa-search input-icon" style="position:absolute; right:15px; top:40px; color:#888;"></i>
+                        <div id="ownerResults" class="search-results-dropdown" style="display:none;"></div>
+                    </div>
+                    <small id="selectedOwnerName" style="color: var(--primary); font-weight: bold; display:block; margin-top:6px;"></small>
+                </div>
+
+                <div class="form-row" style="display:flex; gap:20px;">
+                    <div class="form-group" style="flex:1">
+                        <label>Category</label>
+                        <select id="listCategory" class="form-control" onchange="updateFormLabels()">
+                            <option value="vehicle">Vehicle</option>
+                            <option value="real_estate">Real Estate</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label id="priceLabel">Price per Day (RWF)</label>
+                        <input type="number" id="listPrice" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group"><label>Listing Title</label><input type="text" id="listTitle" class="form-control" placeholder="e.g. Toyota RAV4 2023" required></div>
+
+                <div class="form-group location-box" style="background:#f8f9fa; padding:20px; border-radius:12px; border:1px solid #eee;">
+                    <label style="color:var(--primary); margin-bottom:12px;">📍 Location Details</label>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                        <select id="selProvince" class="form-control" onchange="loadDistricts()"><option value="">Province</option></select>
+                        <select id="selDistrict" class="form-control" onchange="loadSectors()" disabled><option value="">District</option></select>
+                        <select id="selSector" class="form-control" disabled><option value="">Sector</option></select>
+                    </div>
+                    <input type="text" id="listAddress" class="form-control" placeholder="Specific Address (e.g. Near Market)" required>
+                </div>
+
+                <div class="form-group"><label>Description</label><textarea id="listDesc" class="form-control" rows="4" style="resize:none;" required></textarea></div>
+
+                <div class="form-group"><label>Primary Image</label><input type="file" id="listImageFile" class="form-control" accept="image/*" required><small style="color:#666;">Uploads to 'listing-images' bucket</small></div>
+
+                <button type="submit" class="btn-primary" id="createBtn">Create Listing</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PROMO MODAL -->
+    <div class="form-modal" id="promotionModal">
+        <div class="form-content">
+            <div class="form-header">
+                <h3>Add Promotion</h3>
+                <button class="close-modal" onclick="closeModal('promotionModal')">&times;</button>
+            </div>
+            <form id="promoForm" class="form-body">
+                <div class="form-group"><label>Promo Code</label><input type="text" id="promoCode" class="form-control" placeholder="SUMMER2026" required></div>
+                <div class="form-group"><label>Apply to Listing (Optional)</label><select id="promoListingId" class="form-control"><option value="">-- General Promo --</option></select></div>
+                <div class="form-row" style="display:flex; gap:15px;">
+                    <div class="form-group" style="flex:1"><label>Discount (%)</label><input type="number" id="promoDiscount" class="form-control" min="1" max="100" required></div>
+                    <div class="form-group" style="flex:1"><label>Start Date</label><input type="date" id="promoStart" class="form-control" required></div>
+                    <div class="form-group" style="flex:1"><label>End Date</label><input type="date" id="promoEnd" class="form-control" required></div>
+                </div>
+                <div class="form-group"><label>Description</label><textarea id="promoDesc" class="form-control" rows="2"></textarea></div>
+                <div class="form-group"><label>Promotion Banner Image</label><input type="file" id="promoImage" class="form-control" accept="image/*"><small>Uploads to 'promotion-images' bucket</small></div>
+                <button type="submit" class="btn-primary" id="createPromoBtn">Create Promotion</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

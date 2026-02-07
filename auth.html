@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - AfriStay</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo-area">
+            <a href="index.html"><h1>AfriStay</h1></a>
+        </div>
+        <div class="nav-wrapper" id="navWrapper">
+            <i class="fa-solid fa-xmark menu-close" onclick="toggleMenu()"></i>
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="listing.html">Real Estate</a></li>
+                    <li><a href="vehicle.html">Vehicles</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="icon-link"><i class="fa-regular fa-heart"></i></a>
+            </div>
+        </div>
+        <i class="fa-solid fa-bars menu-open" onclick="toggleMenu()"></i>
+    </nav>
+
+    <div class="box auth-box">
+        
+        <div class="box-left">
+            <div class="title-group">
+                <h1 class="white">Join Us!</h1>
+                <h1 class="white"></h1>
+            
+            </div>
+            <p class="auth-desc">Access your bookings, favorites, and more.</p>
+            <i class="fa-solid fa-key big-icon"></i>
+        </div>
+
+        <div class="box-right">
+            
+            <div class="auth-toggle">
+                <button id="btn-signin" class="active" onclick="toggleAuth('signin')">Sign In</button>
+                <button id="btn-signup" onclick="toggleAuth('signup')">Sign Up</button>
+            </div>
+
+            <form id="authForm">
+                <h1 class="orange form-title">Sign In</h1>
+                
+                <div id="nameField" class="input-group hidden">
+                    <input type="text" id="fullName" placeholder="Full Name">
+                    <input type="tel" id="phoneNumber" placeholder="+250" style="margin-top: 15px;">
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+
+                <button type="submit" id="submitBtn">Login</button>
+                
+                <p id="authError" class="error-msg"></p>
+                <p id="authSuccess" class="success-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>
