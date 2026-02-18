@@ -1,12 +1,78 @@
-// assets/js/config.js
-// REQUIRED: fill your Supabase details before loading admin.html
-const SUPABASE_URL = 'https://xfhvwszyrqvotobvakup.supabase.co'; // <-- set this
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmaHZ3c3p5cnF2b3RvYnZha3VwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1Mjc0MzcsImV4cCI6MjA4NTEwMzQzN30.9E_qelxVGJbCOnmnJzRXPbfn8QuYPXod5QU3j5TBfFA'; // <-- set this
+/**
+ * AFRI-STAY GLOBAL CONFIG
+ * Fill SUPABASE_URL and SUPABASE_KEY (anon public key).
+ * Do NOT put service_role key here.
+ */
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.includes('YOUR')) {
-    console.warn('Supabase not configured. Open assets/js/config.js and set SUPABASE_URL & SUPABASE_ANON_KEY.');
+console.log("🚀 [CONFIG] Loading AfriStay configuration...");
+
+const CONFIG = {
+    APP_NAME: "AfriStay Admin",
+    CURRENCY: "RWF",
+    MOBILE_BREAKPOINT: 900,
+    ANIMATION_SPEED: 300,
+
+    // === REPLACE THESE with values from Supabase Settings -> API ===
+    SUPABASE_URL: "https://xuxzeinufjpplxkerlsd.supabase.co", // Your project URL
+    SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1eHplaW51ZmpwcGx4a2VybHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NDQ0OTAsImV4cCI6MjA4NjMyMDQ5MH0.u8D-VZ98wBX448UJXq-UugLPTFf57uq946FSQXJLgac" // REPLACE with your actual anon key
+};
+
+// Compute functions URL automatically from SUPABASE_URL
+try {
+    if (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_URL.includes(".supabase.co")) {
+        const base = CONFIG.SUPABASE_URL.replace(".supabase.co", ".functions.supabase.co");
+        CONFIG.FUNCTIONS_BASE = base;
+        console.log("✅ [CONFIG] Functions URL computed:", CONFIG.FUNCTIONS_BASE);
+    } else {
+        CONFIG.FUNCTIONS_BASE = "";
+        console.warn("⚠️ [CONFIG] No valid Supabase URL found for functions");
+    }
+} catch (e) {
+    CONFIG.FUNCTIONS_BASE = "";
+    console.error("❌ [CONFIG] Error computing functions URL:", e);
 }
 
-window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true }
-});
+console.log("📋 [CONFIG] App Name:", CONFIG.APP_NAME);
+console.log("💰 [CONFIG] Currency:", CONFIG.CURRENCY);
+
+// Create a global supabase client
+if (typeof window !== "undefined") {
+    console.log("🔍 [CONFIG] Checking for Supabase library...");
+    
+    // Check if Supabase library is loaded
+    if (typeof window.supabase === "undefined") {
+        console.error("❌ [CONFIG] Supabase library not found! Make sure you include the Supabase CDN script in your HTML:");
+        console.error("Add this before config.js: <script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script>");
+    } else if (typeof window.supabase.createClient !== "function") {
+        console.error("❌ [CONFIG] window.supabase exists but createClient is not a function");
+        console.error("Current window.supabase:", window.supabase);
+    } else {
+        // Proper way: window.supabase is the library, we create a client from it
+        try {
+            if (!CONFIG.SUPABASE_URL || CONFIG.SUPABASE_KEY.includes("public-anon-key")) {
+                console.error("❌ [CONFIG] Invalid Supabase configuration! Please set SUPABASE_URL and SUPABASE_KEY in config.js");
+                console.error("Current SUPABASE_URL:", CONFIG.SUPABASE_URL);
+                console.error("Current SUPABASE_KEY:", CONFIG.SUPABASE_KEY?.substring(0, 20) + "...");
+            } else {
+                // Create the client and store it
+                window.supabaseClient = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+                console.log("✅ [CONFIG] Supabase client created successfully!");
+                console.log("🔗 [CONFIG] Connected to:", CONFIG.SUPABASE_URL);
+                
+                // Test the connection
+                window.supabaseClient.from('profiles').select('count', { count: 'exact', head: true })
+                    .then(({ count, error }) => {
+                        if (error) {
+                            console.error("❌ [CONFIG] Connection test failed:", error.message);
+                        } else {
+                            console.log("✅ [CONFIG] Connection test successful! Profile count:", count);
+                        }
+                    });
+            }
+        } catch (error) {
+            console.error("❌ [CONFIG] Error creating Supabase client:", error);
+        }
+    }
+}
+
+console.log("✨ [CONFIG] Configuration complete");
