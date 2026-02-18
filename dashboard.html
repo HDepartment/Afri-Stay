@@ -7,8 +7,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="assets/css/admin.css">
+    
+    <link rel="stylesheet" href="assets/css/dashboard.css">
     </head>
     <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -21,19 +21,25 @@
     <aside class="sidebar" id="sidebar">
         <div class="logo-area"><h1>AfriStay</h1></div>
         <nav class="nav" id="mainNav">
-        <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-        <button class="nav-btn" data-tab="users"><i class="fa-solid fa-users"></i> Users</button>
-        <button class="nav-btn" data-tab="listings"><i class="fa-solid fa-list"></i> Listings</button>
-        <button class="nav-btn" data-tab="bookings"><i class="fa-solid fa-calendar-check"></i> Bookings</button>
-        <button class="nav-btn" data-tab="events"><i class="fa-solid fa-calendar-day"></i> Events</button>
-        <button class="nav-btn" data-tab="promotions"><i class="fa-solid fa-tags"></i> Promotions</button>
-        <button class="nav-btn" data-tab="messages"><i class="fa-solid fa-envelope"></i> Messages</button>
-        <button class="nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
-        <button class="nav-btn logout" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></button>
+        <button class="nav-btn" data-tab="users"><i class="fa-solid fa-users"></i> <span>Users</span></button>
+        <button class="nav-btn" data-tab="listings"><i class="fa-solid fa-list"></i><span>Listings</span></button>
+        <button class="nav-btn" data-tab="bookings"><i class="fa-solid fa-calendar-check"></i><span>Bookings</span></button>
+        <button class="nav-btn" data-tab="events"><i class="fa-solid fa-calendar-day"></i><span>Events</span></button>
+        <button class="nav-btn" data-tab="promotions"><i class="fa-solid fa-tags"></i><span>Promotions</span></button>
+        <button class="nav-btn" data-tab="messages"><i class="fa-solid fa-envelope"></i><span>Messages</span></button>
+        <button class="nav-btn" data-tab="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+        <button class="nav-btn logout" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
         </nav>
     </aside>
 
     <main class="main-content" id="mainContent">
+        <!-- Desktop Sidebar Toggle -->
+        <div class="desktop-header">
+            <button id="toggleSidebarBtn" class="toggle-sidebar-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
 
         <!-- DASHBOARD -->
         <div id="dashboardPanel" class="content-panel active">
@@ -89,10 +95,11 @@
             <div class="data-section">
                 <div class="section-header">
                     <h2>User Management</h2>
+                    <button class="action-btn" id="openCreateUserBtn" onclick="openModal('userModal')"><i class="fa-solid fa-user-plus"></i> Add User</button>
                     <div style="display:flex; gap:8px; align-items:center;">
                         <div class="search-box" style="min-width:220px;">
                             <i class="fa-solid fa-search"></i>
-                            <input type="text" id="userSearchInput" placeholder="Search user..." onkeyup="filterTable('userSearchInput','usersTableBody')">
+                            <input type="text" id="userSearchInput" placeholder="Search user...">
                         </div>
                         <button class="action-btn" id="fetchUsersBtn"><i class="fa-solid fa-rotate-right"></i></button>
                     </div>
@@ -100,8 +107,7 @@
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead>
-                            <tr><th>#</th><th>User</th><th>Email</th><th>Phone</th><th>Role</th><th>Owner</th><th>Status</th><th>Action</th></tr>
-                        </thead>
+                            <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Owner</th><th>Status</th><th>Action</th></tr>
                         <tbody id="usersTableBody"></tbody>
                     </table>
                 </div>
@@ -117,26 +123,21 @@
                         <button class="action-btn" id="openCreateListingBtn"><i class="fa-solid fa-plus"></i> Add Listing</button>
                     </div>
 
-                    <div class="filter-toolbar" style="display:flex; gap:10px; width:100%; flex-wrap:wrap;">
+                    <div class="filter-toolbar">
                         <div class="search-box">
-                            <i class="fa-solid fa-search"></i>
-                            <input type="text" id="listingSearchInput" placeholder="Search listing..." onkeyup="filterListings()">
+                            <i id="searchIcon" class="fa-solid fa-search"></i>
+                            <input type="text" id="listingSearchInput" placeholder="Search listing...">
                         </div>
                         <select id="filterProvince" class="form-control"></select>
                         <select id="filterDistrict" class="form-control" disabled></select>
                         <select id="filterSector" class="form-control" disabled></select>
-                        <button class="btn-primary" style="width:auto; padding:0 18px;" id="resetFiltersBtn">Reset</button>
+                        <button class="btn-primary" style="width:auto; height: 35px; padding:0 18px;" id="resetFiltersBtn">Reset</button>
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>#</th><th>Image</th><th>Title</th><th>Price</th><th>Location</th><th>Owner</th><th>Action</th></tr>
-                        </thead>
-                        <tbody id="listingsTableBody"></tbody>
-                    </table>
-                </div>
+                <!-- add below the table or instead of it -->
+                <div id="listingsGrid" class="listings-grid" style="display:none; gap:16px;"></div>
+
             </div>
         </div>
 
@@ -166,8 +167,19 @@
             <div class="data-section">
                 <div class="section-header">
                     <h2>Events</h2>
-                    <button class="action-btn" onclick="openModal('eventModal')"><i class="fa-solid fa-plus"></i> Add Event</button>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="eventSearchInput"
+                                placeholder="Search events..."
+                                onkeyup="filterTable('eventSearchInput','eventsTableBody')">
+                        </div>
+                        <button class="action-btn" onclick="openModal('eventModal')">
+                            <i class="fa-solid fa-plus"></i> Add Event
+                        </button>
+                    </div>
                 </div>
+
                 <div class="table-responsive">
                     <table class="data-table">
                         <thead><tr><th>#</th><th>Title</th><th>Date</th><th>Location</th><th>Action</th></tr></thead>
@@ -182,11 +194,11 @@
             <div class="data-section">
                 <div class="section-header">
                     <h2>Promotions</h2>
-                    <button class="action-btn" onclick="openPromoModal()"><i class="fa-solid fa-plus"></i> Add Promo</button>
+                    <button class="action-btn" onclick="openModal('promotionModal')"><i class="fa-solid fa-plus"></i> Add Promo</button>
                 </div>
                 <div class="table-responsive">
                     <table class="data-table">
-                        <thead><tr><th>Image</th><th>Code</th><th>Listing</th><th>Discount</th><th>Dates</th><th>Action</th></tr></thead>
+                        <thead><tr><th>#</th><th>Title</th><th>Image</th><th>Code</th><th>Listing</th><th>Discount</th><th>Dates</th><th>Action</th></tr></thead>
                         <tbody id="promotionsTableBody"></tbody>
                     </table>
                 </div>
@@ -197,34 +209,131 @@
         <div id="messagesPanel" class="content-panel">
             <div class="chat-container">
                 <div class="chat-sidebar">
-                    <div class="chat-header"><h3>Messages</h3></div>
-                    <div class="chat-user-list" id="chatUserList"></div>
+                    <div class="chat-header">
+                        <h3>Messages</h3>
+                        <div class="search-box" style="margin-top:10px;">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="messageUserSearch"
+                                placeholder="Search users..."
+                                onkeyup="filterChatUsers()">
+                        </div>
+                    </div>
+                    
+                    <div class="chat-user-list" id="chatUserList">
+                        <div class="chat-user-item active">
+                            <div class="chat-user-avatar">U</div>
+                            <div class="chat-user-info">
+                                <h4>User Name</h4>
+                                <p>Last message preview...</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-user-item">
+                            <div class="chat-user-avatar">S</div>
+                            <div class="chat-user-info">
+                                <h4>Shema</h4>
+                                <p>I just sent the backend updates</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="chat-window">
-                    <div class="chat-window-header" id="chatWindowHeader">Select a conversation</div>
-                    <div class="chat-messages" id="chatMessagesArea"></div>
-                    <div class="chat-input-area">
-                        <input type="hidden" id="currentChatUserId">
-                        <input type="text" id="messageInput" placeholder="Type a message..." disabled>
-                        <button id="sendMessageBtn" onclick="sendMessage()" disabled><i class="fa-solid fa-paper-plane"></i></button>
+                    <div class="chat-window-header">
+                        <button id="backToChats" style="display:none;">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <span id="chatWindowHeader">Select a conversation</span>
                     </div>
+
+                    <div class="chat-messages" id="chatMessagesArea"></div>
+                    
                 </div>
             </div>
         </div>
 
         <!-- SETTINGS -->
         <div id="settingsPanel" class="content-panel">
-            <div class="data-section">
-                <h2>Admin Profile Settings</h2>
+            <div class="settings-card">
+
+                <div class="settings-header">
+                    <div class="settings-avatar" id="adminAvatar">A</div>
+                    <div>
+                        <h3 id="adminName">Admin Name</h3>
+                        <p id="adminEmailDisplay">admin@email.com</p>
+                    </div>
+                </div>
+
                 <form id="settingsForm">
-                    <div class="form-group"><label>Current Email</label><input type="email" id="settingsEmail" class="form-control" disabled></div>
-                    <div class="form-group"><label>Update Email (Optional)</label><input type="email" id="newEmail" class="form-control" placeholder="Enter new email"></div>
-                    <div class="form-group"><label>Update Password (Optional)</label><input type="password" id="newPassword" class="form-control" placeholder="New Password"></div>
-                    <div class="form-actions"><button type="submit" class="btn-primary">Save Changes</button></div>
-                    <p id="settingsMsg" style="margin-top:10px;"></p>
+                    <div class="form-group">
+                        <label>Change Email</label>
+                        <input type="email" id="newEmail" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Change Password</label>
+                        <input type="password" id="newPassword" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="quick-main-btn" id="quickMainBtn">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+
+            <div class="quick-menu" id="quickMenu">
+                <button onclick="openModal('listingModal')">
+                    <i class="fa-solid fa-home"></i> Add Listing
+                </button>
+                <button onclick="openModal('promotionModal')">
+                    <i class="fa-solid fa-tags"></i> Add Promotion
+                </button>
+                <button onclick="openModal('eventModal')">
+                    <i class="fa-solid fa-calendar-day"></i> Add Event
+                </button>
+                <button onclick="openModal('userModal')">
+                    <i class="fa-solid fa-calendar-day"></i> Add User
+                </button>
+            </div>
+        </div>
+                <!-- USER MODAL -->
+        <div class="form-modal" id="userModal">
+            <div class="form-content">
+                <div class="form-header">
+                    <h3>Add User</h3>
+                    <button class="close-modal" onclick="closeModal('userModal')">&times;</button>
+                </div>
+                <form class="form-body">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select class="form-control">
+                            <option>User</option>
+                            <option>Owner</option>
+                            <option>Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Create User</button>
                 </form>
             </div>
         </div>
+
 
     </main>
 
@@ -255,7 +364,7 @@
                 <div class="form-group" style="position: relative;">
                     <label>Assign to Owner</label>
                     <div class="search-wrapper" style="position:relative;">
-                        <input type="text" id="ownerSearch" class="form-control" placeholder="Search Owner Name..." autocomplete="off" oninput="searchOwners()">
+                        <input type="text" id="ownerSearch" class="form-control" placeholder="Search Owner Name..." autocomplete="off">
                         <input type="hidden" id="selectedOwnerId">
                         <i class="fa-solid fa-search input-icon" style="position:absolute; right:15px; top:40px; color:#888;"></i>
                         <div id="ownerResults" class="search-results-dropdown" style="display:none;"></div>
@@ -291,7 +400,17 @@
 
                 <div class="form-group"><label>Description</label><textarea id="listDesc" class="form-control" rows="4" style="resize:none;" required></textarea></div>
 
-                <div class="form-group"><label>Primary Image</label><input type="file" id="listImageFile" class="form-control" accept="image/*" required><small style="color:#666;">Uploads to 'listing-images' bucket</small></div>
+                <div class="form-group">
+                    <label>Images (max 10)</label>
+                    <input type="file" id="listImageFiles" class="form-control" accept="image/*" multiple>
+                    <small style="color:#666;">Uploads to 'listing-images' bucket. Max 10 images.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Videos (max 3)</label>
+                    <input type="file" id="listVideoFiles" class="form-control" accept="video/*" multiple>
+                    <small style="color:#666;">Uploads to 'listing-videos' bucket. Max 3 videos.</small>
+                </div>
 
                 <button type="submit" class="btn-primary" id="createBtn">Create Listing</button>
             </form>
@@ -320,8 +439,17 @@
         </div>
     </div>
 
+    <!-- 1. Supabase Library FIRST -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Config -->
     <script src="assets/js/config.js"></script>
-    <script src="assets/js/admin.js"></script>
+
+    <!-- 3. Utils -->
+    <script src="assets/js/utils.js"></script>
+
+    <!-- 4. Admin -->
+    <script src="assets/js/dashboard.js"></script>
+
 </body>
 </html>
