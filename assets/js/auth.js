@@ -1,83 +1,107 @@
-let isSignUp = false;
-
-function toggleAuth(mode) {
-    const title = document.querySelector('.form-title');
-    const submitBtn = document.getElementById('submitBtn');
+// auth.js
+(function () {
+    const toggleSignin = document.getElementById('btn-signin');
+    const toggleSignup = document.getElementById('btn-signup');
     const nameField = document.getElementById('nameField');
-    const btnSignin = document.getElementById('btn-signin');
-    const btnSignup = document.getElementById('btn-signup');
-    const whiteText = document.querySelector('.box-left .title-group');
-    const whiteText1 = whiteText.children[0];
-    const whiteText2 = whiteText.children[1];
+    const authForm = document.getElementById('authForm');
+    const authError = document.getElementById('authError');
+    const authSuccess = document.getElementById('authSuccess');
 
-    // Clear errors
-    document.getElementById('authError').style.display = 'none';
+    let mode = 'signin'; // or 'signup'
 
-    if (mode === 'signup') {
-        isSignUp = true;
-        title.innerText = "Create Account";
-        submitBtn.innerText = "Sign Up";
-        nameField.classList.remove('hidden'); 
-        btnSignup.classList.add('active');
-        btnSignin.classList.remove('active');
-        whiteText1.innerText = " Join Us!";
-        whiteText2.innerText = "";
-    } else {
-        isSignUp = false;
-        title.innerText = "Sign In";
-        submitBtn.innerText = "Login";
+    function showError(msg) {
+        if (authError) { authError.style.display = 'block'; authError.innerText = msg; }
+        if (authSuccess) { authSuccess.style.display = 'none'; authSuccess.innerText = ''; }
+    }
+    function showSuccess(msg) {
+        if (authSuccess) { authSuccess.style.display = 'block'; authSuccess.innerText = msg; }
+        if (authError) { authError.style.display = 'none'; authError.innerText = ''; }
+    }
+
+    window.toggleAuth = (m) => {
+        mode = m;
+        if (mode === 'signup') {
+        nameField.classList.remove('hidden');
+        toggleSignup.classList.add('active');
+        toggleSignin.classList.remove('active');
+        authForm.querySelector('.form-title').innerText = 'Sign Up';
+        } else {
         nameField.classList.add('hidden');
-        btnSignin.classList.add('active');
-        btnSignup.classList.remove('active');
-        whiteText1.innerText = "Welcome";
-        whiteText2.innerText = "Back!";
-
-    }
-}
-
-document.getElementById('authForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const fullName = document.getElementById('fullName').value;
-    const errorMsg = document.getElementById('authError');
-    const successMsg = document.getElementById('authSuccess');
-
-    errorMsg.style.display = 'none';
-
-    try {
-        if (isSignUp) {
-            // 1. Get the new Phone Number value
-            const phone = document.getElementById('phoneNumber').value;
-
-            // 2. Sign Up (Send Name AND Phone in 'options')
-            const { data, error } = await supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        full_name: fullName, // <--- Suitcase Item 1
-                        phone_number: phone  // <--- Suitcase Item 2
-                    }
-                }
-            });
-
-            if (error) throw error;
-
-            // 3. Success (No manual insert code here at all!)
-            successMsg.innerText = "Account created! Please check your email.";
-            successMsg.style.display = 'block';
-
-        }   else {
-            // Sign In
-            const { error } = await supabaseClient.auth.signInWithPassword({
-                email, password
-            });
-            if (error) throw error;
-            window.location.href = "admin.html"; // Go home
+        toggleSignin.classList.add('active');
+        toggleSignup.classList.remove('active');
+        authForm.querySelector('.form-title').innerText = 'Sign In';
         }
-    } catch (err) {
-        errorMsg.innerText = err.message;
-        errorMsg.style.display = 'block';
-    }
-});
+        // clear messages
+        showError('');
+    };
+
+    // default
+    toggleAuth('signin');
+
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showError(''); showSuccess('');
+
+        const fullName = document.getElementById('fullName')?.value?.trim();
+        const phone = document.getElementById('phoneNumber')?.value?.trim();
+        const email = document.getElementById('email')?.value?.trim();
+        const password = document.getElementById('password')?.value;
+
+        if (!email || !password) { showError('Email and password required'); return; }
+
+        const client = window.supabaseClient;
+
+        if (!client) { showError('Supabase not configured'); return; }
+
+        try {
+        if (mode === 'signup') {
+            // Use signUp and attach metadata for profile creation
+            const { data, error } = await client.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { full_name: fullName || null, phone: phone || null }
+            }
+            });
+
+            if (error) {
+            showError(error.message || 'Sign up failed');
+            return;
+            }
+
+            // Success: email confirmation may be required in your Supabase settings
+            showSuccess('Sign up successful. Check your email to confirm then login.');
+        } else {
+            // sign in
+            const { data, error } = await client.auth.signInWithPassword({
+            email,
+            password
+            });
+            if (error) {
+            showError(error.message || 'Sign in failed');
+            return;
+            }
+
+            // Successful login: load profile to detect role, then redirect to admin/dashboard
+            const user = data.user;
+            // Small pause to ensure profile has been created (if auto-create trigger present)
+            setTimeout(async () => {
+            const { data: profile, error: pErr } = await client.from('profiles').select('role').eq('id', user.id).single();
+            const role = (profile && profile.role) || 'user';
+            // Redirect to admin dashboard for demo (single adaptive dashboard)
+            window.location.href = 'dashboard.html';
+            }, 700);
+        }
+        } catch (err) {
+        console.error('Auth error', err);
+        showError('Something went wrong with auth.');
+        }
+    });
+
+    // quick keyboard enter handling
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.activeElement && document.activeElement.form === authForm) {
+        authForm.requestSubmit();
+        }
+    });
+})();
